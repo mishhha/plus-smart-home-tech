@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceActionDto {
+
     @JsonProperty("sensorId") private String sensorId;
     private String type;
     private Integer value;
+
 }
