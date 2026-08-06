@@ -25,7 +25,7 @@ public class EventMapper {
         } else if (dto instanceof TemperatureSensorEventDto t) {
             builder.setPayload(TemperatureSensorAvro.newBuilder().setId(t.getId()).setHubId(t.getHubId()).setTimestamp(t.getTimestamp()).setTemperatureC(t.getTemperatureC()).setTemperatureF(t.getTemperatureF()).build());
         } else {
-            throw new IllegalArgumentException("Unknown sensor event type: " + dto.getClass().getSimpleName());
+            throw new IllegalArgumentException("Неизвестный тип сенсора: " + dto.getClass().getSimpleName());
         }
         return builder.build();
     }
@@ -51,7 +51,7 @@ public class EventMapper {
         } else if (dto instanceof ScenarioRemovedEventDto removed) {
             builder.setPayload(ScenarioRemovedEventAvro.newBuilder().setName(removed.getName()).build());
         } else {
-            throw new IllegalArgumentException("Unknown hub event type: " + dto.getClass().getSimpleName());
+            throw new IllegalArgumentException("Неизвестный тип события: " + dto.getClass().getSimpleName());
         }
         return builder.build();
     }
