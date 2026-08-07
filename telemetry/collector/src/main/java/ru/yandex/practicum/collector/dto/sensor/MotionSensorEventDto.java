@@ -5,14 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MotionSensorEventDto implements SensorEventDto {
     private String id;
-    @JsonProperty("hub_id") private String hubId;
-    private Long timestamp;
-    @JsonProperty("link_quality") private Integer linkQuality;
+    private String hubId;
+    private Instant timestamp;
+    private Integer linkQuality;
     private Boolean motion;
     private Integer voltage;
     private String type;

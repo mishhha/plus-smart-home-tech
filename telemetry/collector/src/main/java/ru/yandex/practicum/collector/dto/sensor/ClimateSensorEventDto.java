@@ -5,15 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClimateSensorEventDto implements SensorEventDto {
     private String id;
-    @JsonProperty("hub_id") private String hubId;
-    private Long timestamp;
-    @JsonProperty("temperature_c") private Integer temperatureC;
+    private String hubId;
+    private Instant timestamp;
+    private Integer temperatureC;
     private Integer humidity;
-    @JsonProperty("co2_level") private Integer co2Level;
+    private Integer co2Level;
     private String type;
 }

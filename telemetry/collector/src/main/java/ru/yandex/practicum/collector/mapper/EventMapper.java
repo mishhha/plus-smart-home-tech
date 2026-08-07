@@ -5,8 +5,6 @@ import ru.yandex.practicum.collector.dto.hub.*;
 import ru.yandex.practicum.collector.dto.sensor.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
-import java.time.Instant;
-
 @Component
 public class EventMapper {
 
@@ -14,7 +12,7 @@ public class EventMapper {
         SensorEventAvro.Builder builder = SensorEventAvro.newBuilder()
             .setId(dto.getId())
             .setHubId(dto.getHubId())
-            .setTimestamp(Instant.ofEpochMilli(dto.getTimestamp()));
+            .setTimestamp(dto.getTimestamp());
 
         if (dto instanceof ClimateSensorEventDto c) {
             builder.setPayload(ClimateSensorAvro.newBuilder()
@@ -41,7 +39,7 @@ public class EventMapper {
             builder.setPayload(TemperatureSensorAvro.newBuilder()
                 .setId(t.getId())
                 .setHubId(t.getHubId())
-                .setTimestamp(Instant.ofEpochMilli(t.getTimestamp()))
+                .setTimestamp(t.getTimestamp())
                 .setTemperatureC(t.getTemperatureC())
                 .setTemperatureF(t.getTemperatureF())
                 .build());
@@ -54,7 +52,7 @@ public class EventMapper {
     public HubEventAvro toAvro(HubEventDto dto) {
         HubEventAvro.Builder builder = HubEventAvro.newBuilder()
             .setHubId(dto.getHubId())
-            .setTimestamp(Instant.ofEpochMilli(dto.getTimestamp()));
+            .setTimestamp(dto.getTimestamp());
 
         if (dto instanceof DeviceAddedEventDto added) {
             builder.setPayload(DeviceAddedEventAvro.newBuilder()

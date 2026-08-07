@@ -20,11 +20,11 @@ public class KafkaProducerService {
 
     public void sendSensorEvent(SensorEventAvro event, String key) {
         sensorKafkaTemplate.send(SENSOR_TOPIC, key, event);
-        log.info("Sent sensor event to topic {}: key={}", SENSOR_TOPIC, key);
+        log.info("Отправлено событие датчика телеметрии в топик {}: ключ={}", SENSOR_TOPIC, key);
     }
 
     public void sendHubEvent(HubEventAvro event, String key) {
         hubKafkaTemplate.send(HUB_TOPIC, key, event);
-        log.info("Sent hub event to topic {}: key={}", HUB_TOPIC, key);
+        log.info("Отправлено событие в топик {}: ключ={}", HUB_TOPIC, key);
     }
 }
