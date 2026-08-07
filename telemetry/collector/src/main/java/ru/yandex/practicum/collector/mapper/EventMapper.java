@@ -14,37 +14,32 @@ public class EventMapper {
             .setHubId(dto.getHubId())
             .setTimestamp(dto.getTimestamp());
 
-        if (dto instanceof ClimateSensorEventDto c) {
-            builder.setPayload(ClimateSensorAvro.newBuilder()
+        switch (dto) {
+            case ClimateSensorEventDto c -> builder.setPayload(ClimateSensorAvro.newBuilder()
                 .setTemperatureC(c.getTemperatureC())
                 .setHumidity(c.getHumidity())
                 .setCo2Level(c.getCo2Level())
                 .build());
-        } else if (dto instanceof LightSensorEventDto l) {
-            builder.setPayload(LightSensorAvro.newBuilder()
+            case LightSensorEventDto l -> builder.setPayload(LightSensorAvro.newBuilder()
                 .setLinkQuality(l.getLinkQuality())
                 .setLuminosity(l.getLuminosity())
                 .build());
-        } else if (dto instanceof MotionSensorEventDto m) {
-            builder.setPayload(MotionSensorAvro.newBuilder()
+            case MotionSensorEventDto m -> builder.setPayload(MotionSensorAvro.newBuilder()
                 .setLinkQuality(m.getLinkQuality())
                 .setMotion(m.getMotion())
                 .setVoltage(m.getVoltage())
                 .build());
-        } else if (dto instanceof SwitchSensorEventDto s) {
-            builder.setPayload(SwitchSensorAvro.newBuilder()
+            case SwitchSensorEventDto s -> builder.setPayload(SwitchSensorAvro.newBuilder()
                 .setState(s.getState())
                 .build());
-        } else if (dto instanceof TemperatureSensorEventDto t) {
-            builder.setPayload(TemperatureSensorAvro.newBuilder()
+            case TemperatureSensorEventDto t -> builder.setPayload(TemperatureSensorAvro.newBuilder()
                 .setId(t.getId())
                 .setHubId(t.getHubId())
                 .setTimestamp(t.getTimestamp())
                 .setTemperatureC(t.getTemperatureC())
                 .setTemperatureF(t.getTemperatureF())
                 .build());
-        } else {
-            throw new IllegalArgumentException("Неизвестный тип сенсора: " + dto.getClass().getSimpleName());
+            default -> throw new IllegalArgumentException("Неизвестный тип сенсора: " + dto.getClass().getSimpleName());
         }
         return builder.build();
     }
@@ -54,17 +49,15 @@ public class EventMapper {
             .setHubId(dto.getHubId())
             .setTimestamp(dto.getTimestamp());
 
-        if (dto instanceof DeviceAddedEventDto added) {
-            builder.setPayload(DeviceAddedEventAvro.newBuilder()
+        switch (dto) {
+            case DeviceAddedEventDto added -> builder.setPayload(DeviceAddedEventAvro.newBuilder()
                 .setId(added.getId())
                 .setType(DeviceTypeAvro.valueOf(added.getDeviceType()))
                 .build());
-        } else if (dto instanceof DeviceRemovedEventDto removed) {
-            builder.setPayload(DeviceRemovedEventAvro.newBuilder()
+            case DeviceRemovedEventDto removed -> builder.setPayload(DeviceRemovedEventAvro.newBuilder()
                 .setId(removed.getId())
                 .build());
-        } else if (dto instanceof ScenarioAddedEventDto added) {
-            builder.setPayload(ScenarioAddedEventAvro.newBuilder()
+            case ScenarioAddedEventDto added -> builder.setPayload(ScenarioAddedEventAvro.newBuilder()
                 .setName(added.getName())
                 .setConditions(added.getConditions().stream().map(c -> ScenarioConditionAvro.newBuilder()
                     .setSensorId(c.getSensorId())
@@ -78,12 +71,10 @@ public class EventMapper {
                     .setValue(a.getValue())
                     .build()).toList())
                 .build());
-        } else if (dto instanceof ScenarioRemovedEventDto removed) {
-            builder.setPayload(ScenarioRemovedEventAvro.newBuilder()
+            case ScenarioRemovedEventDto removed -> builder.setPayload(ScenarioRemovedEventAvro.newBuilder()
                 .setName(removed.getName())
                 .build());
-        } else {
-            throw new IllegalArgumentException("Неизвестный тип события: " + dto.getClass().getSimpleName());
+            default -> throw new IllegalArgumentException("Неизвестный тип события: " + dto.getClass().getSimpleName());
         }
         return builder.build();
     }
