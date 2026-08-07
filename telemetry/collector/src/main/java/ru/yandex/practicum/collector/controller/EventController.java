@@ -35,4 +35,5 @@ public class EventController {
         kafkaProducerService.sendHubEvent(avroEvent, key);
         return ResponseEntity.ok().build();
     }
+
 }
