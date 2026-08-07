@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScenarioConditionDto {
-    @JsonProperty("sensorId") private String sensorId;
+    @JsonProperty("sensor_id") private String sensorId;
     private String type;
     private String operation;
-    private Integer value;
+    private Object value;
 }

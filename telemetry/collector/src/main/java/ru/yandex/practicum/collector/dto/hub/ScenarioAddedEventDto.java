@@ -7,15 +7,14 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.Instant;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScenarioAddedEventDto implements HubEventDto {
-    @JsonProperty("hubId") private String hubId;
-    private Instant timestamp;
+    @JsonProperty("hub_id") private String hubId;
+    private Long timestamp;
     @Size(min = 3) private String name;
     @Valid @NotEmpty private List<ScenarioConditionDto> conditions;
     @Valid @NotEmpty private List<DeviceActionDto> actions;

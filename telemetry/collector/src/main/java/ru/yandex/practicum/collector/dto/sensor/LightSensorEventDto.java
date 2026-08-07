@@ -4,16 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.Instant;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class LightSensorEventDto implements SensorEventDto {
     private String id;
-    @JsonProperty("hubId") private String hubId;
-    private Instant timestamp;
-    @JsonProperty("linkQuality") private Integer linkQuality;
-    @JsonProperty("luminosity") private Integer luminosity;
+    @JsonProperty("hub_id") private String hubId;
+    private Long timestamp;
+    @JsonProperty("link_quality") private Integer linkQuality;
+    private Integer luminosity;
     private String type;
 }
