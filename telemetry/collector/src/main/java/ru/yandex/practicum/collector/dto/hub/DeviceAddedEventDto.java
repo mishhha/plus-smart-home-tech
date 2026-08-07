@@ -1,14 +1,18 @@
 package ru.yandex.practicum.collector.dto.hub;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.time.Instant;
 
-@Data @AllArgsConstructor @NoArgsConstructor
-public class DeviceAddedEventDto implements HubEventDto {
-    private String hubId;
-    private Instant timestamp;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class DeviceAddedEventDto extends HubEventDto {
     private String id;
     private String deviceType;
-    private String type;
+
+    @Override
+    public String getType() {
+        return "DEVICE_ADDED";
+    }
 }

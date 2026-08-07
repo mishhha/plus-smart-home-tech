@@ -1,19 +1,18 @@
 package ru.yandex.practicum.collector.dto.sensor;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.time.Instant;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class LightSensorEventDto implements SensorEventDto {
-    private String id;
-    private String hubId;
-    private Instant timestamp;
-    private String type;
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class LightSensorEventDto extends SensorEventDto {
     private Integer linkQuality;
     private Integer luminosity;
+
+    @Override
+    public String getType() {
+        return "LIGHT_SENSOR_EVENT";
+    }
 }

@@ -2,6 +2,8 @@ package ru.yandex.practicum.collector.dto.hub;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
@@ -17,10 +19,11 @@ import java.time.Instant;
     @JsonSubTypes.Type(value = ScenarioAddedEventDto.class, name = "SCENARIO_ADDED"),
     @JsonSubTypes.Type(value = ScenarioRemovedEventDto.class, name = "SCENARIO_REMOVED")
 })
-public interface HubEventDto {
+@Getter
+@Setter
+public abstract class HubEventDto {
+    private String hubId;
+    private Instant timestamp = Instant.now();
 
-    String getHubId();
-    Instant getTimestamp();
-    String getType();
-
+    public abstract String getType();
 }

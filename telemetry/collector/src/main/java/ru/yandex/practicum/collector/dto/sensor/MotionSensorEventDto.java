@@ -1,21 +1,19 @@
 package ru.yandex.practicum.collector.dto.sensor;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.time.Instant;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class MotionSensorEventDto implements SensorEventDto {
-    private String id;
-    private String hubId;
-    private Instant timestamp;
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class MotionSensorEventDto extends SensorEventDto {
     private Integer linkQuality;
     private Boolean motion;
     private Integer voltage;
-    private String type;
+
+    @Override
+    public String getType() {
+        return "MOTION_SENSOR_EVENT";
+    }
 }

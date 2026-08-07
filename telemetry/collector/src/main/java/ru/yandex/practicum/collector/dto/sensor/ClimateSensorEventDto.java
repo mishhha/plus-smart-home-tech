@@ -1,20 +1,19 @@
 package ru.yandex.practicum.collector.dto.sensor;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.time.Instant;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ClimateSensorEventDto implements SensorEventDto {
-    private String id;
-    private String hubId;
-    private Instant timestamp;
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class ClimateSensorEventDto extends SensorEventDto {
     private Integer temperatureC;
     private Integer humidity;
     private Integer co2Level;
-    private String type;
+
+    @Override
+    public String getType() {
+        return "CLIMATE_SENSOR_EVENT";
+    }
 }

@@ -2,7 +2,8 @@ package ru.yandex.practicum.collector.dto.sensor;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
+import lombok.Getter;
+import lombok.Setter;
 import java.time.Instant;
 
 @JsonTypeInfo(
@@ -18,11 +19,12 @@ import java.time.Instant;
     @JsonSubTypes.Type(value = SwitchSensorEventDto.class, name = "SWITCH_SENSOR_EVENT"),
     @JsonSubTypes.Type(value = TemperatureSensorEventDto.class, name = "TEMPERATURE_SENSOR_EVENT")
 })
-public interface SensorEventDto {
+@Getter
+@Setter
+public abstract class SensorEventDto {
+    private String id;
+    private String hubId;
+    private Instant timestamp = Instant.now();
 
-    String getId();
-    String getHubId();
-    Instant getTimestamp();
-    String getType();
-
+    public abstract String getType();
 }

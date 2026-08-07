@@ -1,13 +1,17 @@
 package ru.yandex.practicum.collector.dto.hub;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.time.Instant;
 
-@Data @AllArgsConstructor @NoArgsConstructor
-public class ScenarioRemovedEventDto implements HubEventDto {
-    private String hubId;
-    private Instant timestamp;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class ScenarioRemovedEventDto extends HubEventDto {
     private String name;
-    private String type;
+
+    @Override
+    public String getType() {
+        return "SCENARIO_REMOVED";
+    }
 }
