@@ -1,6 +1,5 @@
 package ru.yandex.practicum.collector.dto.hub;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -21,8 +20,7 @@ import java.time.Instant;
 public interface HubEventDto {
 
     String getHubId();
-
     Instant getTimestamp();
-
     String getType();
+
 }

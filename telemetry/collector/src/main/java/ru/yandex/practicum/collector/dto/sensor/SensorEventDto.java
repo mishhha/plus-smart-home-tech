@@ -1,6 +1,5 @@
 package ru.yandex.practicum.collector.dto.sensor;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -22,10 +21,8 @@ import java.time.Instant;
 public interface SensorEventDto {
 
     String getId();
-
     String getHubId();
-
     Instant getTimestamp();
-
     String getType();
+
 }
