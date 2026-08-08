@@ -1,4 +1,4 @@
-package ru.yandex.practicum.collector.serialization;
+package ru.yandex.practicum.serialization;
 
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;
