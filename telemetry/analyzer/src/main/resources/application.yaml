@@ -13,6 +13,14 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  kafka:
+    bootstrap-servers: localhost:9092
+
+analyzer:
+  kafka:
+    topics:
+      snapshots: telemetry.snapshots.v1
+      hub-events: telemetry.hubs.v1
+    consumer:
+      snapshots-group: analyzer-snapshots
+      hub-events-group: analyzer-hub-events
