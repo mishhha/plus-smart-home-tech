@@ -23,8 +23,15 @@ public class ConditionCheckerImpl implements ConditionChecker {
 
     private Optional<Integer> extractValue(ConditionType type, Object data) {
         return switch (type) {
-            case TEMPERATURE -> data instanceof TemperatureSensorAvro t
-                ? Optional.of(t.getTemperatureC()) : Optional.empty();
+            case TEMPERATURE -> {
+                if (data instanceof TemperatureSensorAvro t) {
+                    yield Optional.of(t.getTemperatureC());
+                } else if (data instanceof ClimateSensorAvro c) {
+                    yield Optional.of(c.getTemperatureC());  // ← климат-сенсор тоже меряет температуру!
+                }
+                yield Optional.empty();
+            }
+
             case LUMINOSITY -> data instanceof LightSensorAvro l
                 ? Optional.of(l.getLuminosity()) : Optional.empty();
             case MOTION -> data instanceof MotionSensorAvro m
