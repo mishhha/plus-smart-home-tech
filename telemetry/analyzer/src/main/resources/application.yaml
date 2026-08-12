@@ -12,7 +12,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
   kafka:
     bootstrap-servers: localhost:9092
 
@@ -32,3 +32,7 @@ grpc:
       enableKeepAlive: true
       keepAliveWithoutCalls: true
       negotiationType: plaintext
+
+logging:
+  level:
+    ru.yandex.practicum.analyzer: DEBUG
