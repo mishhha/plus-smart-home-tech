@@ -22,7 +22,4 @@ public class Action {
 
     @Column(name = "value")
     private Integer value;
-
-    @Column(name = "sensor_id")
-    private String sensorId;
 }

@@ -27,7 +27,4 @@ public class Condition {
 
     @Column(name = "value")
     private Integer value;
-
-    @Column(name = "sensor_id")
-    private String sensorId;
 }

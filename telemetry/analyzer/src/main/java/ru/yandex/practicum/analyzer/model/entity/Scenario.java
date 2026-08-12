@@ -23,24 +23,15 @@ public class Scenario {
     @Column(name = "hub_id")
     private String hubId;
 
-    @Column(name = "name")
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "scenario_conditions",
-        joinColumns = @JoinColumn(name = "scenario_id"),
-        inverseJoinColumns = @JoinColumn(name = "condition_id")
-    )
+    @OneToMany(mappedBy = "scenario", cascade = CascadeType.ALL,
+        orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
-    private Set<Condition> conditions = new HashSet<>();
+    private Set<ScenarioCondition> conditions = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "scenario_actions",
-        joinColumns = @JoinColumn(name = "scenario_id"),
-        inverseJoinColumns = @JoinColumn(name = "action_id")
-    )
+    @OneToMany(mappedBy = "scenario", cascade = CascadeType.ALL,
+        orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
-    private Set<Action> actions = new HashSet<>();
+    private Set<ScenarioAction> actions = new HashSet<>();
 }
