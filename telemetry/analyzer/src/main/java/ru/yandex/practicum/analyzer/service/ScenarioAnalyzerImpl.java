@@ -31,16 +31,21 @@ public class ScenarioAnalyzerImpl implements ScenarioAnalyzer {
             .toList();
     }
 
-    private boolean allConditionsMet(Scenario scenario, Map<String, SensorStateAvro> states) {
+    private boolean allConditionsMet(
+        Scenario scenario,
+        Map<String, SensorStateAvro> states
+    ) {
         return scenario.getConditions().stream()
             .allMatch(sc -> conditionChecker.isMet(
                 sc.getCondition(),
                 states.get(sc.getSensor().getId())));
     }
 
-    private ActionToExecute toActionToExecute(SensorsSnapshotAvro snapshot,
-                                              Scenario scenario,
-                                              ru.yandex.practicum.analyzer.model.entity.ScenarioAction sa) {
+    private ActionToExecute toActionToExecute(
+        SensorsSnapshotAvro snapshot,
+        Scenario scenario,
+        ru.yandex.practicum.analyzer.model.entity.ScenarioAction sa
+    ) {
         return new ActionToExecute(
             snapshot.getHubId().toString(),
             scenario.getName(),
