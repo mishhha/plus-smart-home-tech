@@ -25,7 +25,7 @@ public class KafkaConfig {
     @Value("${aggregator.kafka.consumer.group-id}")
     private String groupId;
 
-    @Bean(destroyMethod = "")
+    @Bean(destroyMethod = "close")
     public KafkaConsumer<String, SensorEventAvro> sensorEventConsumer() {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -38,7 +38,7 @@ public class KafkaConfig {
         return new KafkaConsumer<>(props);
     }
 
-    @Bean(destroyMethod = "")
+    @Bean(destroyMethod = "close")
     public KafkaProducer<String, SensorsSnapshotAvro> snapshotProducer() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
