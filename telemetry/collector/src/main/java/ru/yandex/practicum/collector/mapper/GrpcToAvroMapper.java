@@ -35,6 +35,9 @@ public class GrpcToAvroMapper {
             case TEMPERATURE_SENSOR -> {
                 TemperatureSensorProto temp = grpcEvent.getTemperatureSensor();
                 builder.setPayload(TemperatureSensorAvro.newBuilder()
+                    .setId(grpcEvent.getId())
+                    .setHubId(grpcEvent.getHubId())
+                    .setTimestamp(timestamp)
                     .setTemperatureC(temp.getTemperatureC())
                     .setTemperatureF(temp.getTemperatureF())
                     .build());
@@ -97,6 +100,12 @@ public class GrpcToAvroMapper {
                 ScenarioAddedEventProto added = grpcEvent.getScenarioAdded();
                 builder.setPayload(ScenarioAddedEventAvro.newBuilder()
                     .setName(added.getName())
+                    .setConditions(added.getConditionList().stream()
+                        .map(this::toAvroCondition)
+                        .toList())
+                    .setActions(added.getActionList().stream()
+                        .map(this::toAvroAction)
+                        .toList())
                     .build());
             }
             case SCENARIO_REMOVED -> {
@@ -112,5 +121,27 @@ public class GrpcToAvroMapper {
         }
 
         return builder.build();
+    }
+
+    private ScenarioConditionAvro toAvroCondition(ScenarioConditionProto c) {
+        ScenarioConditionAvro.Builder b = ScenarioConditionAvro.newBuilder()
+            .setSensorId(c.getSensorId())
+            .setType(ConditionTypeAvro.valueOf(c.getType().name()))
+            .setOperation(ConditionOperationAvro.valueOf(c.getOperation().name()));
+        switch (c.getValueCase()) {
+            case BOOL_VALUE -> b.setValue(c.getBoolValue());
+            case INT_VALUE -> b.setValue(c.getIntValue());
+            case VALUE_NOT_SET -> throw new IllegalArgumentException(
+                "У условия сценария не задано значение");
+        }
+        return b.build();
+    }
+
+    private DeviceActionAvro toAvroAction(DeviceActionProto a) {
+        return DeviceActionAvro.newBuilder()
+            .setSensorId(a.getSensorId())
+            .setType(ActionTypeAvro.valueOf(a.getType().name()))
+            .setValue(a.hasValue() ? a.getValue() : null)
+            .build();
     }
 }
