@@ -53,7 +53,6 @@ public class SnapshotProcessor {
                 for (ConsumerRecord<String, SensorsSnapshotAvro> record : records) {
                     processSnapshot(record.value());
                 }
-                // Повторная обработка снапшотов нежелательна → ручной commit
                 snapshotConsumer.commitSync();
             }
         } catch (WakeupException e) {

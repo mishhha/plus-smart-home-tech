@@ -42,8 +42,6 @@ public class ActionExecutorImpl implements ActionExecutor {
     private DeviceActionProto toProto(ActionToExecute action) {
         return DeviceActionProto.newBuilder()
             .setSensorId(action.sensorId())
-            // enum в proto может называться иначе (например, быть вложенным
-            // в DeviceActionProto) — IDE подскажет; главное — valueOf по имени
             .setType(ActionTypeProto.valueOf(action.type().name()))
             .setValue(action.value() == null ? 0 : action.value())
             .build();

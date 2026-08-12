@@ -19,10 +19,12 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Bean(destroyMethod = "")
+    @Bean(destroyMethod = "close")
     public KafkaConsumer<String, HubEventAvro> hubEventConsumer(
         @Value("${analyzer.kafka.consumer.hub-events-group}") String groupId) {
         Properties props = new Properties();
+        props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 1);
+        props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 100);
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
@@ -32,7 +34,7 @@ public class KafkaConfig {
         return new KafkaConsumer<>(props);
     }
 
-    @Bean(destroyMethod = "")
+    @Bean(destroyMethod = "close")
     public KafkaConsumer<String, SensorsSnapshotAvro> snapshotConsumer(
         @Value("${analyzer.kafka.consumer.snapshots-group}") String groupId) {
         Properties props = new Properties();
