@@ -75,8 +75,17 @@ public class SnapshotProcessor {
         log.debug("SnapshotProcessor: снапшот хаба {}, датчиков: {}",
             hubId, snapshot.getSensorsState().size());
 
-        List<Scenario> scenarios = scenarioRepository.findByHubId(hubId);
-        if (scenarios.isEmpty()) {
+        List<Scenario> scenarios = null;
+        for (int attempt = 0; attempt < 5; attempt++) {
+            scenarios = scenarioRepository.findByHubId(hubId);
+            if (!scenarios.isEmpty()) break;
+            try { Thread.sleep(200); } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+
+        if (scenarios == null || scenarios.isEmpty()) {
             return;
         }
 
