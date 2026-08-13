@@ -3,6 +3,7 @@ package ru.yandex.practicum.analyzer.config;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
@@ -15,6 +16,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(KafkaProperties.class)
 public class KafkaConfig {
 
     private final KafkaProperties kafkaProperties;

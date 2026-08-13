@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
@@ -18,6 +19,7 @@ import java.util.Properties;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(KafkaProperties.class)
 public class KafkaConfig {
 
     private final KafkaProperties kafkaProperties;

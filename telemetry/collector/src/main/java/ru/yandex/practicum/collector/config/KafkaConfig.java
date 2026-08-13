@@ -3,6 +3,7 @@ package ru.yandex.practicum.collector.config;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(KafkaProperties.class)
 public class KafkaConfig {
 
     private final KafkaProperties kafkaProperties;
