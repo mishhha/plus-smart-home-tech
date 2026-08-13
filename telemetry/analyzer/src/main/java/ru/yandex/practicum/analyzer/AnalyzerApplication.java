@@ -21,6 +21,6 @@ public class AnalyzerApplication {
         hubEventsThread.setName("HubEventHandlerThread");
         hubEventsThread.start();
 
-        snapshotProcessor.start();
+        snapshotProcessor.run();
     }
 }

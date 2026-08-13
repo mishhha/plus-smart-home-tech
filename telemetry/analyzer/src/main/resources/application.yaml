@@ -13,11 +13,10 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: false
-  kafka:
-    bootstrap-servers: localhost:9092
 
 analyzer:
   kafka:
+    bootstrap-servers: localhost:9092
     topics:
       snapshots: telemetry.snapshots.v1
       hub-events: telemetry.hubs.v1

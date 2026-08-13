@@ -22,12 +22,12 @@ public class ScenarioAction {
     private Scenario scenario;
 
     @MapsId("sensorId")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sensor_id")
     private Sensor sensor;
 
     @MapsId("actionId")
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "action_id")
     private Action action;
 }

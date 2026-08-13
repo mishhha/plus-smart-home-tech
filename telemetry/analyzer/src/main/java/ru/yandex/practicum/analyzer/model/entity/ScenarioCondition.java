@@ -22,12 +22,12 @@ public class ScenarioCondition {
     private Scenario scenario;
 
     @MapsId("sensorId")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sensor_id")
     private Sensor sensor;
 
     @MapsId("conditionId")
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "condition_id")
     private Condition condition;
 }
