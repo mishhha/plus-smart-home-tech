@@ -12,7 +12,12 @@ import ru.yandex.practicum.analyzer.repository.ScenarioRepository;
 import ru.yandex.practicum.analyzer.repository.SensorRepository;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -58,9 +63,18 @@ public class HubEventServiceImpl implements HubEventService {
         scenario.getConditions().clear();
         scenario.getActions().clear();
 
+        Set<String> sensorIds = new HashSet<>();
+        event.getConditions().forEach(c -> sensorIds.add(c.getSensorId().toString()));
+        event.getActions().forEach(a -> sensorIds.add(a.getSensorId().toString()));
+
+        Map<String, Sensor> sensors = sensorRepository.findAllByIdInAndHubId(sensorIds, hubId)
+            .stream()
+            .collect(Collectors.toMap(Sensor::getId, Function.identity()));
+
         for (ScenarioConditionAvro c : event.getConditions()) {
-            sensorRepository.findByIdAndHubId(c.getSensorId().toString(), hubId).ifPresentOrElse(
-                sensor -> scenario.getConditions().add(ScenarioCondition.builder()
+            Sensor sensor = sensors.get(c.getSensorId().toString());
+            if (sensor != null) {
+                scenario.getConditions().add(ScenarioCondition.builder()
                     .scenario(scenario)
                     .sensor(sensor)
                     .condition(Condition.builder()
@@ -68,23 +82,26 @@ public class HubEventServiceImpl implements HubEventService {
                         .operation(ConditionOperation.valueOf(c.getOperation().name()))
                         .value(toInt(c.getValue()))
                         .build())
-                    .build()),
-                () -> log.warn("Датчик {} не найден в хабе {}, условие пропущено",
-                    c.getSensorId(), hubId));
+                    .build());
+            } else {
+                log.warn("Датчик {} не найден в хабе {}, условие пропущено", c.getSensorId(), hubId);
+            }
         }
 
         for (DeviceActionAvro a : event.getActions()) {
-            sensorRepository.findByIdAndHubId(a.getSensorId().toString(), hubId).ifPresentOrElse(
-                sensor -> scenario.getActions().add(ScenarioAction.builder()
+            Sensor sensor = sensors.get(a.getSensorId().toString());
+            if (sensor != null) {
+                scenario.getActions().add(ScenarioAction.builder()
                     .scenario(scenario)
                     .sensor(sensor)
                     .action(Action.builder()
                         .type(ActionType.valueOf(a.getType().name()))
                         .value(a.getValue())
                         .build())
-                    .build()),
-                () -> log.warn("Датчик {} не найден в хабе {}, действие пропущено",
-                    a.getSensorId(), hubId));
+                    .build());
+            } else {
+                log.warn("Датчик {} не найден в хабе {}, действие пропущено", a.getSensorId(), hubId);
+            }
         }
 
         scenarioRepository.save(scenario);

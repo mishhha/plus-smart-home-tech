@@ -22,7 +22,7 @@ public class KafkaConfig {
 
     private final KafkaProperties kafkaProperties;
 
-    @Bean(destroyMethod = "close")
+    @Bean(destroyMethod = "")
     public KafkaConsumer<String, SensorEventAvro> sensorEventConsumer() {
         KafkaProperties.Consumer consumerProps = kafkaProperties.getConsumer();
         Properties props = new Properties();
@@ -35,7 +35,7 @@ public class KafkaConfig {
         return new KafkaConsumer<>(props);
     }
 
-    @Bean(destroyMethod = "close")
+    @Bean(destroyMethod = "")
     public KafkaProducer<String, SensorsSnapshotAvro> snapshotProducer() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());

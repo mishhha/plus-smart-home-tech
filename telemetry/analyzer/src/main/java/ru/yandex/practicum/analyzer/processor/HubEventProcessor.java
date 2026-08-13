@@ -1,53 +1,35 @@
 package ru.yandex.practicum.analyzer.processor;
 
-import jakarta.annotation.PreDestroy;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.errors.WakeupException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.analyzer.config.KafkaProperties;
 import ru.yandex.practicum.analyzer.service.HubEventService;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
-import java.time.Duration;
 import java.util.List;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
-public class HubEventProcessor implements Runnable {
+public class HubEventProcessor extends BaseKafkaProcessor<String, HubEventAvro> {
 
-    private final KafkaConsumer<String, HubEventAvro> hubEventConsumer;
     private final HubEventService hubEventService;
 
-    @Value("${analyzer.kafka.topics.hub-events}")
-    private String topic;
-
-    private volatile Thread loopThread;
+    public HubEventProcessor(
+        KafkaConsumer<String, HubEventAvro> hubEventConsumer,
+        HubEventService hubEventService,
+        KafkaProperties kafkaProperties) {
+        super(hubEventConsumer, "HubEventProcessor",
+            List.of(kafkaProperties.getTopics().getHubEvents()));
+        this.hubEventService = hubEventService;
+    }
 
     @Override
-    public void run() {
-        loopThread = Thread.currentThread();
-        log.info("HubEventProcessor: подписка на топик {}", topic);
-        hubEventConsumer.subscribe(List.of(topic));
-        try {
-            while (true) {
-                ConsumerRecords<String, HubEventAvro> records =
-                    hubEventConsumer.poll(Duration.ofMillis(100));
-                for (ConsumerRecord<String, HubEventAvro> record : records) {
-                    handle(record.value());
-                }
-            }
-        } catch (WakeupException e) {
-            log.info("HubEventProcessor: получен сигнал остановки");
-        } catch (Exception e) {
-            log.error("HubEventProcessor: ошибка обработки событий", e);
-        } finally {
-            hubEventConsumer.close();
-            log.info("HubEventProcessor: consumer закрыт");
+    protected void handleRecords(ConsumerRecords<String, HubEventAvro> records) {
+        for (ConsumerRecord<String, HubEventAvro> record : records) {
+            handle(record.value());
         }
     }
 
@@ -67,20 +49,6 @@ public class HubEventProcessor implements Runnable {
             hubEventService.removeScenario(hubId, removed.getName().toString());
         } else {
             log.warn("HubEventProcessor: неизвестный тип события {}", payload.getClass());
-        }
-    }
-
-    @PreDestroy
-    public void stop() {
-        log.info("HubEventProcessor: @PreDestroy, прерываем poll loop");
-        hubEventConsumer.wakeup();
-        try {
-            if (loopThread != null && loopThread != Thread.currentThread()) {
-                loopThread.join(10_000);
-                log.info("HubEventProcessor: poll loop завершён");
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         }
     }
 }
