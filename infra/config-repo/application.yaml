@@ -5,7 +5,6 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
   cloud:
-    openfeign:
       client:
         config:
           default: # применяется по умолчанию для всех клиентов (можно указать имя @FeignClient вместо default)
