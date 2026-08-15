@@ -17,7 +17,6 @@ public record CreateOrderRequest(
         String customerEmail,
 
         @NotEmpty(message = "Заказ должен содержать хотя бы один товар")
-        @Valid
         List<OrderItemRequest> items
 ) {
 }
