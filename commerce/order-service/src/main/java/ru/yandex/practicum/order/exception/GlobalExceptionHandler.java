@@ -20,6 +20,13 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleOrderProcessing(OrderProcessingException e) {
+        log.error("Товар не доступен к заказу", e);
+        return new ErrorResponse(HttpStatus.CONFLICT.value(), "Товар не доступен для заказа.");
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleDataIntegrity(DataIntegrityViolationException ex) {

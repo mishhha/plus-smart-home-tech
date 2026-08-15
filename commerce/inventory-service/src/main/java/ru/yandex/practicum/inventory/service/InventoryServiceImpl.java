@@ -87,4 +87,5 @@ public class InventoryServiceImpl implements InventoryService {
                 request.quantity(), request.productId())
         );
     }
+
 }

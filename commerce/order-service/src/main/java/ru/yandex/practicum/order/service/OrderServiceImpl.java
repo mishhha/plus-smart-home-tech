@@ -4,14 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.practicum.order.client.InventoryClient;
-import ru.yandex.practicum.order.client.ProductClient;
-import ru.yandex.practicum.order.client.ProductInfo;
+import ru.yandex.practicum.order.client.feign.InventoryClient;
+import ru.yandex.practicum.order.client.feign.ProductClient;
+import ru.yandex.practicum.order.client.feign.dto.ProductDto;
+import ru.yandex.practicum.order.client.feign.dto.ReserveRequest;
 import ru.yandex.practicum.order.dto.CreateOrderRequest;
 import ru.yandex.practicum.order.dto.OrderDto;
 import ru.yandex.practicum.order.entity.Order;
 import ru.yandex.practicum.order.entity.OrderItem;
 import ru.yandex.practicum.order.exception.NotFoundException;
+import ru.yandex.practicum.order.exception.OrderProcessingException;
 import ru.yandex.practicum.order.mapper.OrderMapper;
 import ru.yandex.practicum.order.repository.OrderRepository;
 
@@ -34,13 +36,18 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderMapper.toEntity(request);
 
         for (OrderItem item : order.getItems()) {
-            inventoryClient.reserve(item.getProductId(), item.getQuantity());
+            ReserveRequest reserveRequest = new ReserveRequest(item.getId(), item.getQuantity());
+            inventoryClient.reserveStock(reserveRequest);
         }
 
         for (OrderItem item : order.getItems()) {
             if (item.getProductName() == null || item.getPrice() == null) {
                 log.info("Дозаполнение данных для товара {} из product-service", item.getProductId());
-                ProductInfo info = productClient.getProduct(item.getProductId());
+                ProductDto info = productClient.getProductById(item.getProductId());
+
+                if (!info.active()) {
+                    throw new OrderProcessingException("Товар не доступен для покупки: " + item.getProductId());
+                }
 
                 if (info == null) {
                     throw new NotFoundException("Товар не найден в каталоге: " + item.getProductId());
@@ -49,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
                 if (item.getProductName() == null) {
                     item.setProductName(info.name());
                 }
+
                 if (item.getPrice() == null) {
                     item.setPrice(info.price());
                 }
