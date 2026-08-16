@@ -1,8 +1,10 @@
 package ru.yandex.practicum.product.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.product.dto.CreateProductRequest;
 import ru.yandex.practicum.product.dto.ProductDto;
@@ -11,6 +13,7 @@ import ru.yandex.practicum.product.service.ProductService;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -34,7 +37,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public List<ProductDto> search(@RequestParam String query) {
+    public List<ProductDto> search(@RequestParam @NotBlank String query) {
         return productService.search(query);
     }
 

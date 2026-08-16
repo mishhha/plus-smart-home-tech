@@ -53,9 +53,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public List<ProductDto> search(String query) {
-        if (query == null || query.isBlank()) {
-            return List.of();
-        }
         return productRepository.findByNameContainingIgnoreCaseAndActiveTrue(query).stream()
             .map(productMapper::toDto)
             .toList();
