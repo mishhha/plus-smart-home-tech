@@ -10,14 +10,15 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class ProductClient {
 
+    private static final String PRODUCT_URL_TEMPLATE =
+        "http://product-service/api/products/%d";
+
     private final RestTemplate restTemplate;
 
     public ProductInfo getProduct(Long productId) {
-
-        String url = "http://product-service/api/products/" + productId;
-        log.info("Запрос информации о товаре из product-service: {}", url);
+        log.info("Запрос информации о товаре из product-service: {}", PRODUCT_URL_TEMPLATE);
         try {
-            return restTemplate.getForObject(url, ProductInfo.class);
+            return restTemplate.getForObject(PRODUCT_URL_TEMPLATE, ProductInfo.class);
         } catch (Exception e) {
             log.error("Не удалось получить товар {} из product-service", productId, e);
             return null;
