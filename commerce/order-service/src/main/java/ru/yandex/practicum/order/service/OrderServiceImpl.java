@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import ru.yandex.practicum.order.client.InventoryClient;
 import ru.yandex.practicum.order.client.ProductClient;
 import ru.yandex.practicum.order.client.ProductInfo;
@@ -26,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final ProductClient productClient;
     private final InventoryClient inventoryClient;
+    private final TransactionTemplate transactionTemplate;
 
     @Override
     public OrderDto create(CreateOrderRequest request) {
@@ -56,10 +58,11 @@ public class OrderServiceImpl implements OrderService {
 
         order.setTotalPrice(orderMapper.calculateTotalPrice(order.getItems()));
 
-        Order savedOrder = orderRepository.save(order);
-        log.info("Создан заказ id={}, totalPrice={}", savedOrder.getId(), savedOrder.getTotalPrice());
-
-        return orderMapper.toDto(savedOrder);
+        return transactionTemplate.execute(status -> {
+            Order savedOrder = orderRepository.save(order);
+            log.info("Создан заказ id={}, totalPrice={}", savedOrder.getId(), savedOrder.getTotalPrice());
+            return orderMapper.toDto(savedOrder);
+        });
     }
 
     @Override
