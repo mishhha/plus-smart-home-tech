@@ -28,7 +28,6 @@ public class OrderServiceImpl implements OrderService {
     private final InventoryClient inventoryClient;
 
     @Override
-    @Transactional
     public OrderDto create(CreateOrderRequest request) {
 
         Order order = orderMapper.toEntity(request);
