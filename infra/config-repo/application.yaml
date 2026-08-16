@@ -5,12 +5,12 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
   cloud:
-      client:
-        config:
-          default: # применяется по умолчанию для всех клиентов (можно указать имя @FeignClient вместо default)
-            connectTimeout: 3000 # 3 cek - Это время подключения
-            readTimeout: 3000 # 3 cek - Это время получения ответа
-            loggerLevel: basic
+    client:
+      config:
+        default: # применяется по умолчанию для всех клиентов (можно указать имя @FeignClient вместо default)
+          connectTimeout: 3000 # 3 cek - Это время подключения
+          readTimeout: 3000 # 3 cek - Это время получения ответа
+          loggerLevel: basic
 
 logging:
   level:
@@ -29,6 +29,9 @@ logging:
         kafka: WARN
 
 eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.int(1000,9999)}
+    prefer-ip-address: true
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
