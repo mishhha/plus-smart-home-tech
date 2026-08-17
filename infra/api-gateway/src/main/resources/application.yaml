@@ -3,16 +3,3 @@ spring:
     name: api-gateway
   config:
     import: optional:configserver:http://localhost:8888
-
-app:
-  security:
-    users:
-      - username: ivan
-        password: ivan
-        roles:
-          - USER
-      - username: anna
-        password: anna
-        roles:
-          - USER
-          - ADMIN

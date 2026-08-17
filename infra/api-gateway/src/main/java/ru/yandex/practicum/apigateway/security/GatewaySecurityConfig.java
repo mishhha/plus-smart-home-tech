@@ -18,6 +18,8 @@ public class GatewaySecurityConfig {
         return http
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+            .logout(ServerHttpSecurity.LogoutSpec::disable)
+            .cors(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()

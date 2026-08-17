@@ -6,7 +6,11 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -38,6 +42,10 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
     }
 )
 @AutoConfigureWebTestClient
+@Import({
+    GatewaySecurityConfigTest.TestBackendConfig.class,
+    GatewaySecurityConfigTest.TestSecurityConfig.class
+})
 class GatewaySecurityConfigTest {
 
     @Autowired
@@ -123,6 +131,15 @@ class GatewaySecurityConfigTest {
         @Bean
         RouterFunction<ServerResponse> testBackendRoutes() {
             return route(path("/test-backend"), request -> ServerResponse.ok().build());
+        }
+    }
+
+    @TestConfiguration
+    static class TestSecurityConfig {
+        @Bean
+        @Primary
+        public PasswordEncoder testPasswordEncoder() {
+            return NoOpPasswordEncoder.getInstance();
         }
     }
 }
